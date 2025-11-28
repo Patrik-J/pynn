@@ -37,7 +37,7 @@ class Layer:
         self.activation = activation 
         self.dv_activation = dv_activation
 
-    def inject(self, a:np.ndarray, z:np.ndarray) -> np.ndarray:
+    def inject(self, a:np.ndarray) -> np.ndarray:
         """
             Forward propagation.
             
@@ -45,8 +45,6 @@ class Layer:
             ----------------
                 a : np.ndarray
                     The activation vector of the previous layer.
-                z : np.ndarray
-                    The weighted output vector of the previous layer.
                     
             Returns
             ----------------
@@ -56,7 +54,6 @@ class Layer:
         
         # store the input, which is the output of the previous layer
         self.previous_a = a
-        self.previous_z = z
         
         # determine the output of this layer
         self.z = self.weights @ a + self.bias        # z = Wx + b
