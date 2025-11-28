@@ -7,8 +7,11 @@ from .backpropagation import backprop
 from .gradient import initial_delta
 from .save import store_neural_network
 from .load import load_NN
+from .cost import cost as cost_NN
 
 import numpy as np
+from time import time
+import sys
 
 class Network:
     """
@@ -176,6 +179,46 @@ class Network:
     def __set_weights_and_bias__(self, index:int, weights:np.ndarray, bias:np.ndarray) -> None:
         self.layers[index].weights = weights
         self.layers[index].bias = bias
+    
+    def train(self, tc:TrainingContainer, cost:str, error:float = 1e-6) -> None:
+        self.cost = cost
+                
+        print(f"Training started...")
+        start_time = time()
+        
+        # initial injection
+        for example in tc:
+            example.set_neural_output(self.__forward_propagation__(example))
+
+        # error 
+        err = cost_NN(container=tc, function=self.cost)
+        
+        while err > error:
+            delta = initial_delta(tc=tc, cost=self.cost)
+                        
+            # update weights and bias
+            for i in list(reversed(range(self.num_layers))):
+                delta = self.layers[i].update(delta)
+    
+            # re-inject
+            for example in tc:
+                    example.set_neural_output(self.__forward_propagation__(example))
+
+            # current error 
+            err = cost_NN(container=tc, function=self.cost)
+
+    
+            time_passed = time() - start_time
+            sys.stdout.write("Current error: %f" % (err) + "\tTime passed: %f s\r" % (time_passed) )
+            sys.stdout.flush()
+        
+        
+        stop_time = time() 
+        
+        
+        print(f"Training finished. Final error: {err}")
+        print(f"Required time: {round(stop_time - start_time, 2)} s")
+        
     
     @staticmethod
     def load(directory:str) -> "Network":
