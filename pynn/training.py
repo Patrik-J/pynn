@@ -26,12 +26,21 @@ class TrainingExample:
         return self.target_value
         
     def __getitem__(self, index) -> np.ndarray:
-        if index == 0:
-            return self.get_nn_input()
-        elif index == 1:
-            return self.get_target_value()
-        else:
-            raise IndexError
+        match index:
+            case 0:
+                return self.get_nn_input()
+            case 1:
+                return self.get_target_value()
+            case 2:
+                return self.get_neural_output()
+            case _:
+                raise IndexError
+    
+    def set_neural_output(self, nn_output:np.ndarray) -> None:
+        self.nn_output = nn_output
+        
+    def get_neural_output(self) -> np.ndarray:
+        return self.nn_output
     
 class TrainingContainer:
     """ 
