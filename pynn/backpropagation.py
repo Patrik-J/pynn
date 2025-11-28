@@ -7,12 +7,17 @@ def backprop(layers:list[Layer], initital_delta:np.ndarray) -> None:
         # get single layer
         layer:Layer = layers[i]
         
+        # multiply delta with g'(z^l)
+        if i > 0:
+            delta *= layer.dv_activation(layer.z)
+        
         # determine gradient of the cost function with respect to the weights and bias        
         weight_grad = delta @ layer.previous_a 
         bias_grad = delta
         
-        # update delta 
-        delta = (layer.weights.T @ delta) * layer.dv_activation(layer.previous_z)
+        # update delta (without multiplying by g'(z^l-1) just yet)
+        # idea: δ^l-1 = W^T x δ^l * g'(z^l-1), but instead of storing z^l-1 and z^l in each layer, the multiplication with g'(z^l-1) is done in the next down layer, where it is simply g'(z^l)
+        delta = (layer.weights.T @ delta)
         
         # learning rate
         lr = layer.lr
