@@ -1,15 +1,8 @@
 import numpy as np 
-from .layer import Layer 
 from .network import Network 
 from .save import read_array
 
-from pathlib import Path
-
-def num_subdirectories(directory:str) -> int:
-    p = Path(directory)
-    return sum(1 for f in p.iterdir() if f.is_dir())
-
-def load_header(headerfile:str) -> tuple:
+def __load_header(headerfile:str) -> tuple:
     """
         Load the data from a header file.
         
@@ -58,7 +51,7 @@ def __load_bias(layerdirectory:str) -> np.ndarray:
 def load_NN(directory:str) -> Network:
     headerfile = f"{directory}\\nn_header.txt"
     
-    num_layers, inputs, outputs, neurons, activation, lr = load_header(headerfile=headerfile)
+    num_layers, inputs, outputs, neurons, activation, lr = __load_header(headerfile=headerfile)
     
     nn = Network(layers=num_layers, initial_inputs=inputs, final_outputs=outputs, learning_rate=lr, neurons_per_layer=neurons, hidden_activation=activation)
     
