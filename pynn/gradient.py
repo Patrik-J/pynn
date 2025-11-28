@@ -2,7 +2,7 @@ import numpy as np
 from .training import TrainingContainer
 from .cost import gradient
 
-def initial_delta(tc:TrainingContainer, fprime:callable, cost:str) -> np.ndarray:
+def initial_delta(tc:TrainingContainer, cost:str) -> np.ndarray:
     """ 
         Determine the initial delta δ^L by determining it for each training example and taking the average.
     """
