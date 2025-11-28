@@ -62,7 +62,7 @@ def create_header_file(nn:Network, directory:str) -> None:
     s += f"Number of neurons in each hidden layer: {nn.neurons_per_layer}\n"
     s += f"Learning rates of each layer: "
     for i in range(len(nn.lr)):
-        s += f"{nn.lr[i]}:" 
+        s += f"{nn.lr[i]};" 
 
     filename = f"{directory}\\nn_header.txt"
     f = open(filename, "w")
@@ -90,3 +90,19 @@ def write_array(file:str, array:np.ndarray) -> None:
     f = open(file, "w")
     f.write(s)
     f.close()
+    
+def read_array(file:str) -> np.ndarray:
+    f = open(file, "r") 
+    lines = f.readlines() 
+    f.close() 
+
+    dim2 = len(lines[0].split(","))    
+    dim1 = len(lines)
+        
+    arr = np.zeros(dtype=float, shape=(dim1, dim2))
+    for i in range(dim1):
+        s = lines[i].split(",")
+        for j in range(dim2):
+            arr[i,j] = float(s[j])
+    
+    return arr
