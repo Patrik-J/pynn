@@ -6,17 +6,23 @@ def single_cost_MSE(te:TrainingExample) -> float:
         Uses mean-squared-error.
     """
     sum = 0
-    diff = te.get_target() - te.get_input()
+    diff = te.get_target_value() - te.get_nn_input()
     for i in range(len(diff)):
         sum += diff[i]**2 
     return 0.5*sum    
+
+def grad_MSE(te:TrainingExample) -> np.ndarray:
+    return te.get_target_value() - te.get_nn_input()
     
 def single_cost_CE(te:TrainingExample) -> float:
     """
         Uses cross-entropy error.
     """
     input, target = te.get_nn_input(), te.get_target_value()
-    return - (target*np.log(input) + (1 - target)*np.log(1 - input))
+    return - np.sum((target*np.log(input) + (1 - target)*np.log(1 - input)))
+
+def grad_CE(te:TrainingExample) -> np.ndarray:
+    return None 
 
 def cost(container:TrainingContainer, function:str) -> float:
     """  
@@ -35,3 +41,12 @@ def cost(container:TrainingContainer, function:str) -> float:
     for i in range(N):
         sum += func(container[i])
     return sum * 1/N
+
+def gradient(function:str) -> callable:
+    match function:
+        case "mse":
+            return grad_MSE
+        case "ce":
+            return grad_CE 
+        case _:
+            raise Exception(f"Unknown option '{function}' for gradient of cost function.")
